@@ -1,0 +1,34 @@
+#! /bin/bash 
+###########################################
+# RapidApps BVT Work Item Handler
+###########################################
+
+# constants
+baseDir=$(cd `dirname "$0"`;pwd)
+export ARROW_HOME=$baseDir
+# functions
+
+# is java home available
+function verifyJavaHome(){
+    if [ ! -z $JAVA_HOME ]; then
+        echo "JAVA_HOME="$JAVA_HOME 
+        java -version
+        if [ ! "$?" -eq 0 ]; then
+            echo "java is not in the path now."
+            exit 1;
+        fi
+    else
+        echo "set JAVA_HOME as an environment variable."
+        exit 2;
+    fi
+}
+
+function run(){
+    verifyJavaHome
+    echo "execute your script ..."
+    java -jar $ARROW_HOME/lib/jython-standalone-2.5.3.jar $*
+
+}
+# main 
+[ -z "${BASH_SOURCE[0]}" -o "${BASH_SOURCE[0]}" = "$0" ] || return
+run $*
